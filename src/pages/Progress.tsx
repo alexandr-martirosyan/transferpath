@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useData } from '../state/data'
 import { useProfile } from '../state/profile'
 import type { Grade } from '../domain/types'
-import { auditGE, patternFor } from '../services/geAudit'
+import { auditGE, patternFor, suggestFor, TAG_NAMES } from '../services/geAudit'
 import { computeGpa, GRADE_LABELS, projectGpa, requiredAvg } from '../services/gpa'
 import { collegesInScope } from '../services/selection'
 
@@ -32,6 +32,18 @@ export default function Progress() {
   const scopeIds = collegesInScope(p, d).map((s) => s.college.id)
 
   const collegeCourses = d.courses.filter((c) => c.collegeId === college)
+  const takenIdSet = new Set(p.taken.map((t) => t.courseId))
+  const takenCanon = new Set(takenCourses.map((x) => x.c.canon))
+  const geCandidates = (() => {
+    const order = [p.homeCollegeId, ...scopeIds.filter((id) => id !== p.homeCollegeId)]
+    const seen = new Set<string>()
+    const out = []
+    for (const cid of order) for (const c of d.courses) {
+      if (c.collegeId !== cid || takenIdSet.has(c.id) || takenCanon.has(c.canon) || seen.has(c.canon) || !c.ge.length) continue
+      seen.add(c.canon); out.push(c)
+    }
+    return out
+  })()
   const add = () => {
     if (!courseId || p.taken.some((t) => t.courseId === courseId)) return
     p.set({ taken: [...p.taken, { courseId, grade }] })
@@ -118,7 +130,8 @@ export default function Progress() {
         </div>
 
         <div className="card p-4">
-          <h2 className="mb-3 font-semibold">{pattern.name} checklist</h2>
+          <h2 className="font-semibold">{pattern.name} checklist</h2>
+          <p className="mb-3 text-xs text-slate-500">{pattern.summary} Each area below lists its rule, what’s still missing, and courses that would count.</p>
           <div className="grid gap-3 md:grid-cols-2">
             {audit.map((a) => {
               const planned = a.used.some((c) => plannedIds.has(c.id))
@@ -130,10 +143,34 @@ export default function Progress() {
                     <span className="text-sm font-semibold">Area {a.rule.id} · {a.rule.name}</span>
                     <span className="text-xs">{state === 'done' ? '✅ Done' : state === 'planned' ? '🕒 Planned' : state === 'optional' ? 'ℹ️ Optional' : '❌ Missing'}</span>
                   </div>
+                  <p className="mt-1 text-xs text-slate-600">{a.rule.desc}</p>
                   <div className="mt-1 flex flex-wrap gap-1">
                     {a.used.map((c) => <span key={c.id} className="badge bg-white text-slate-700">{collegeShort(c.collegeId)} {c.code}</span>)}
                   </div>
-                  {!a.done && <p className="mt-1 text-xs text-slate-600">{a.rule.optional ? a.rule.optional : `Need: ${a.missing.join(', ')}`}</p>}
+                  {!a.done && !a.rule.optional && (
+                    <div className="mt-2 border-t border-black/5 pt-2">
+                      <p className="text-xs font-semibold text-rose-700">Still need: {a.missing.join(' + ')}</p>
+                      {(() => {
+                        const sugg = suggestFor(a, geCandidates).slice(0, 6)
+                        if (!sugg.length) return <p className="mt-1 text-xs text-slate-500">No matching course found at the colleges you selected.</p>
+                        return (
+                          <div className="mt-1">
+                            <p className="text-[11px] text-slate-500">Courses that count — click to add as planned:</p>
+                            <div className="mt-1 flex flex-wrap gap-1">
+                              {sugg.map((c) => (
+                                <button key={c.id} onClick={() => p.set({ taken: [...p.taken, { courseId: c.id, grade: 'PLAN' }] })}
+                                  title={`${c.title} · ${c.units} units · ${c.ge.filter((t) => TAG_NAMES[t]).map((t) => TAG_NAMES[t]).join(', ')}`}
+                                  className="rounded-md border border-slate-200 bg-white px-1.5 py-0.5 text-[11px] hover:border-indigo-400 hover:text-indigo-700">
+                                  + {c.collegeId !== p.homeCollegeId ? `${collegeShort(c.collegeId)} ` : ''}{c.code} <span className="text-slate-400">{c.title}</span>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )
+                      })()}
+                    </div>
+                  )}
+                  {!a.done && a.rule.optional && <p className="mt-1 text-xs text-slate-500">ℹ️ {a.rule.optional}</p>}
                 </div>
               )
             })}
