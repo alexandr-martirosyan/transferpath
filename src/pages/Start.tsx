@@ -44,7 +44,7 @@ export default function Start() {
     },
     {
       title: 'Which UCs would you like to transfer to?',
-      hint: 'Pick as many as you want.',
+      hint: 'Pick as many as you want. “TAG for some majors” means the campus offers a guaranteed-admission agreement, but not for every major — the next step shows exactly which of your majors qualify.',
       ok: p.targetUcIds.length > 0,
       body: (
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
@@ -55,7 +55,7 @@ export default function Start() {
                 className={`flex items-center gap-3 rounded-xl border-2 p-3 text-left ${on ? 'border-indigo-600 bg-indigo-50' : 'border-slate-200 hover:border-indigo-300'}`}>
                 <span className={`grid h-5 w-5 place-items-center rounded border text-xs ${on ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-300'}`}>{on ? '✓' : ''}</span>
                 <span className="flex-1 font-medium">{u.name}</span>
-                {TAG_UCS.has(u.id) && <span className="badge bg-emerald-100 text-emerald-800" title="Offers Transfer Admission Guarantee">TAG</span>}
+                {TAG_UCS.has(u.id) && <span className="badge bg-emerald-50 text-emerald-700" title="Transfer Admission Guarantee — only for some majors at this campus">TAG for some majors</span>}
               </button>
             )
           })}
