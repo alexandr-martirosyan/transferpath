@@ -23,16 +23,6 @@ export function classifyMajors(d: Dataset, ucIds: string[], keyword: string) {
   return { main, related }
 }
 
-/** Majors actually in the plan: main ones unless unticked, related ones only if ticked. */
-export function plannedMajors(d: Dataset, ucIds: string[], keyword: string, overrides: Record<string, boolean>) {
-  const { main, related } = classifyMajors(d, ucIds, keyword)
-  return {
-    main,
-    related,
-    selected: [...main.filter((m) => overrides[m.id] !== false), ...related.filter((m) => overrides[m.id] === true)],
-  }
-}
-
 export interface MatrixCell { courses: Course[] }
 export interface MatrixRow { req: Requirement; cells: Record<string, MatrixCell>; covered: boolean; coveredAtHome: boolean }
 

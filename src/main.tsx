@@ -1,11 +1,13 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import './index.css'
 import { DataProvider } from './state/data'
 import Layout from './components/Layout'
 import Home from './pages/Home'
-import Planner from './pages/Planner'
+import Courses from './pages/Courses'
+import Start from './pages/Start'
+import Plan from './pages/Plan'
 import Majors from './pages/Majors'
 import Chances from './pages/Chances'
 import Progress from './pages/Progress'
@@ -18,7 +20,10 @@ createRoot(document.getElementById('root')!).render(
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="planner" element={<Planner />} />
+            <Route path="start" element={<Start />} />
+            <Route path="plan" element={<Plan />} />
+            <Route path="courses" element={<Courses />} />
+            <Route path="planner" element={<Navigate to="/courses" replace />} />
             <Route path="majors" element={<Majors />} />
             <Route path="chances" element={<Chances />} />
             <Route path="progress" element={<Progress />} />

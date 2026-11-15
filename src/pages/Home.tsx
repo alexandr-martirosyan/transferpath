@@ -1,16 +1,18 @@
 import { Link } from 'react-router-dom'
 import { useData } from '../state/data'
+import { useProfile } from '../state/profile'
 
 const TOOLS = [
-  ['/planner', '🧭', 'Transfer Planner', 'Pick many UCs + a major keyword. See every requirement and its equivalent at your college and every college within your radius — in one table.'],
-  ['/majors', '🔎', 'Major Explorer', 'Type “engineering” and compare every related major across UCs: prep load, admit GPA, admit rate, TAG/TAP.'],
-  ['/chances', '📊', 'Admission Chances', 'Historical admit GPAs made readable. Enter your GPA, see Reach / Target / Likely and TAG guarantees.'],
-  ['/progress', '✅', 'My Progress', 'Add courses from any college. See remaining Cal-GETC / IGETC areas, major prep, and your projected GPA.'],
-  ['/search', '📅', 'Course Search', 'Need PHYS 103 in winter? Find equivalents nearby with times and open seats.'],
+  ['/courses', '📋', 'What to take', 'One checklist of every prep course for all your UC majors, and the best college to take each one.'],
+  ['/majors', '🔎', 'Explore majors', 'Compare related majors across UCs, or see which majors your courses already fit.'],
+  ['/chances', '📊', 'My chances', 'Your GPA vs. past admitted students, plus TAG guarantees and UCLA TAP.'],
+  ['/progress', '✅', 'GE & GPA', 'Add classes from any college. See what’s left for Cal-GETC/IGETC and your projected GPA.'],
+  ['/search', '📅', 'Find a class', 'Need PHYS 103 in winter? Find it nearby with times and open seats.'],
 ] as const
 
 export default function Home() {
   const { d } = useData()
+  const onboarded = useProfile((s) => s.onboarded)
   const ccs = d.colleges.filter((c) => c.type === 'CC').length
   return (
     <div className="space-y-10">
@@ -19,8 +21,17 @@ export default function Home() {
         <h1 className="max-w-3xl text-4xl font-extrabold leading-tight md:text-5xl">Plan your UC transfer in one place — not 50 ASSIST tabs.</h1>
         <p className="mt-4 max-w-2xl text-indigo-100">Compare requirements across every UC and every nearby college at once, see your admission chances, and track what’s left for Cal-GETC.</p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <Link to="/planner" className="btn bg-white !px-5 !py-2.5 text-indigo-700 hover:bg-indigo-50">Start planning →</Link>
-          <Link to="/progress" className="btn border border-white/40 !px-5 !py-2.5 text-white hover:bg-white/10">Check my progress</Link>
+          {onboarded ? (
+            <>
+              <Link to="/plan" className="btn bg-white !px-5 !py-2.5 text-indigo-700 hover:bg-indigo-50">Continue to my plan →</Link>
+              <Link to="/start" className="btn border border-white/40 !px-5 !py-2.5 text-white hover:bg-white/10">Redo setup</Link>
+            </>
+          ) : (
+            <>
+              <Link to="/start" className="btn bg-white !px-5 !py-2.5 text-indigo-700 hover:bg-indigo-50">Get started — 2 minutes →</Link>
+              <Link to="/plan" className="btn border border-white/40 !px-5 !py-2.5 text-white hover:bg-white/10">See a demo plan</Link>
+            </>
+          )}
         </div>
         <div className="mt-8 flex flex-wrap gap-6 text-sm text-indigo-100">
           <span><b className="text-2xl text-white">9</b> UC campuses</span>
@@ -52,9 +63,9 @@ export default function Home() {
 
       <section className="grid gap-4 md:grid-cols-3">
         {[
-          ['1', 'Tell us where you are', 'Home college, ZIP, or your location + a radius.'],
-          ['2', 'Pick UCs & a major', 'As many campuses as you like; keyword finds all related majors.'],
-          ['3', 'Get one plan', 'Requirements, equivalents, chances, and what’s left — printable for your counselor.'],
+          ['1', 'Answer 4 questions', 'Your college, how far you’d travel, your UCs, and your major.'],
+          ['2', 'Get your plan', 'What to take next, where, and your chances, all on one page.'],
+          ['3', 'Keep it updated', 'Add classes as you take them and watch your GE and GPA update.'],
         ].map(([n, t, s]) => (
           <div key={n} className="flex gap-3">
             <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-indigo-100 font-bold text-indigo-700">{n}</span>

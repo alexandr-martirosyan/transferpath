@@ -1,12 +1,14 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useData } from '../state/data'
+import { SetupBar, SetupDrawer } from './SetupBar'
 
 const NAV = [
-  ['/planner', 'Transfer Planner'],
-  ['/majors', 'Major Explorer'],
-  ['/chances', 'Admission Chances'],
-  ['/progress', 'My Progress'],
-  ['/search', 'Course Search'],
+  ['/plan', 'My Plan'],
+  ['/courses', 'What to Take'],
+  ['/majors', 'Explore Majors'],
+  ['/chances', 'My Chances'],
+  ['/progress', 'GE & GPA'],
+  ['/search', 'Find a Class'],
 ] as const
 
 const DEADLINES = [
@@ -20,6 +22,8 @@ const DEADLINES = [
 
 export default function Layout() {
   const { d } = useData()
+  const { pathname } = useLocation()
+  const showSetup = !['/', '/start'].includes(pathname)
   return (
     <div className="min-h-screen">
       <header className="no-print sticky top-0 z-[1000] border-b border-slate-200 bg-white/90 backdrop-blur">
@@ -46,8 +50,10 @@ export default function Layout() {
         </div>
       </header>
       <main className="mx-auto max-w-7xl px-4 py-6">
+        {showSetup && <SetupBar />}
         <Outlet />
       </main>
+      <SetupDrawer />
       <footer className="border-t border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-4 py-4 text-xs text-slate-500">
           ⚠️ {d.meta.note} TransferPath is a planning aid, not an official articulation or admission decision. Always confirm on{' '}

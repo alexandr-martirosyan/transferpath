@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom'
 import { useData } from '../state/data'
 import { useProfile } from '../state/profile'
 import type { Term } from '../domain/types'
-import LocationPanel from '../components/LocationPanel'
 import { findEquivalents, findSourceCourses } from '../services/search'
 import { collegesInScope, resolveOrigin } from '../services/selection'
 
@@ -24,12 +23,11 @@ export default function Search() {
   const hits = source ? findEquivalents(d, source, origin, scope, term, openOnly) : []
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
-      <aside className="card h-fit p-4 lg:sticky lg:top-28"><LocationPanel /></aside>
+    <div>
       <section className="min-w-0 space-y-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Course Search</h1>
-          <p className="text-sm text-slate-500">Find an equivalent of any course at colleges near you — with term, schedule, and open seats.</p>
+          <h1 className="text-3xl font-bold text-slate-900">Find a class</h1>
+          <p className="text-slate-500">Can’t get a class at your college? Find the same class nearby, with times and open seats.</p>
         </div>
         <div className="card flex flex-wrap items-end gap-3 p-4">
           <div className="min-w-64 flex-1">

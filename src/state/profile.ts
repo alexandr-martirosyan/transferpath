@@ -15,8 +15,8 @@ export interface Profile {
   manualCollegeIds: string[]
   targetUcIds: string[]
   keyword: string
-  targetMajorIds: string[]
-  majorOverrides: Record<string, boolean> // planner: untick main / tick related majors
+  targetMajorIds: string[] // "My majors" — the ONE list every page uses
+  onboarded: boolean // finished the Get-started wizard
   taken: TakenCourse[]
   startYear: number // first CC term year (Fall)
   gePattern: GEPattern
@@ -40,10 +40,10 @@ export const defaultProfile: Profile = {
   radius: 25,
   selectionMode: 'radius',
   manualCollegeIds: ['gcc', 'pcc'],
-  targetUcIds: ['ucla', 'ucb', 'ucsd', 'uci'],
+  targetUcIds: ['ucla', 'ucb', 'ucsd', 'uci', 'ucd'],
   keyword: 'computer science',
-  targetMajorIds: ['ucla-cs', 'ucb-cs', 'ucsd-cs', 'ucd-cs', 'ucsc-cs'],
-  majorOverrides: {},
+  targetMajorIds: ['ucla-cs', 'ucb-cs', 'ucsd-cs', 'uci-cs', 'ucd-cs'],
+  onboarded: false,
   taken: [
     { courseId: 'gcc:MATH 103', grade: 'A' },
     { courseId: 'gcc:MATH 104', grade: 'B' },
@@ -70,6 +70,6 @@ export const useProfile = create<ProfileStore>()(
         set((s) => ({ [key]: s[key].includes(id) ? s[key].filter((x) => x !== id) : [...s[key], id] }) as Partial<Profile>),
       reset: () => set(defaultProfile),
     }),
-    { name: 'transferpath-profile-v2' },
+    { name: 'transferpath-profile-v3' },
   ),
 )

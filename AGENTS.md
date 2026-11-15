@@ -20,7 +20,8 @@ Custom CSS utilities (`card`, `btn-primary`, `chip-on`, `badge`, `input`, `label
 1. **UI never imports mock data.** All data flows: `DataRepository.load()` → `Dataset` → `useData()` context.
 2. **Business logic lives in `src/services/*`** as pure functions over `Dataset` (no React). Put new logic there.
 3. **Domain types** in `src/domain/types.ts` are the contract between data sources and UI. Extend, don't break.
-4. **Student state** (`src/state/profile.ts`) is a persisted Zustand store shared by all pages. Bump the storage key version if you change its shape incompatibly.
+4. **One list of majors:** `profile.targetMajorIds` ("My majors") drives every page. UC picks + keyword are only for *finding* majors.
+5. **Student state** (`src/state/profile.ts`) is a persisted Zustand store shared by all pages. Bump the storage key version if you change its shape incompatibly.
 
 ```
 src/
@@ -41,8 +42,12 @@ src/
     search.ts              query parsing, equivalents + sections
   state/profile.ts         persisted student profile
   state/data.tsx           DataProvider / useData()
-  components/              Layout (nav, deadlines strip, disclaimer), LocationPanel, CollegeMap, UCPicker, Badges
-  pages/                   Home, Planner, Majors, Chances, Progress, Search
+  services/coursePlan.ts   buildCoursePlan (merged course checklist + where to take), majorFit ("majors my courses fit")
+  state/ui.ts              non-persisted UI state (setup drawer)
+  components/              Layout (nav, deadlines, SetupBar, disclaimer), SetupBar/SetupDrawer, MajorPicker,
+                           LocationPanel, CollegeMap, UCPicker, Badges
+  pages/                   Home, Start (4-step wizard), Plan (dashboard), Courses (checklist + compare matrix),
+                           Majors (search + fits-my-courses), Chances, Progress (GE & GPA), Search (find a class)
 ```
 
 ## How equivalence works (mock)

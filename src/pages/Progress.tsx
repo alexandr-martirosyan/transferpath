@@ -97,7 +97,7 @@ export default function Progress() {
       </aside>
 
       <section className="min-w-0 space-y-5">
-        <h1 className="text-2xl font-bold text-slate-900">My Progress</h1>
+        <div><h1 className="text-3xl font-bold text-slate-900">GE & GPA</h1><p className="text-slate-500">Add every class you’ve taken or plan to take (from any college). We’ll track GE, units and GPA.</p></div>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           {[
             ['Transfer GPA', stats.gradedUnits ? stats.gpa.toFixed(2) : '—', `${stats.gradedUnits} graded units`],
@@ -161,9 +161,9 @@ export default function Progress() {
         </div>
 
         <div className="card p-4">
-          <h2 className="mb-1 font-semibold">🎯 Major prep for my target majors</h2>
-          <p className="mb-3 text-xs text-slate-500">Star majors in Planner or Major Explorer. Missing courses show where to take them near you.</p>
-          {p.targetMajorIds.length === 0 && <p className="text-sm text-slate-500">No target majors yet.</p>}
+          <h2 className="mb-1 font-semibold">🎯 Major prep for my majors</h2>
+          <p className="mb-3 text-xs text-slate-500">Missing courses show where to take them near you.</p>
+          {p.targetMajorIds.length === 0 && <p className="text-sm text-slate-500">No majors in your plan yet.</p>}
           <div className="grid gap-4 xl:grid-cols-2">
             {d.majors.filter((m) => p.targetMajorIds.includes(m.id)).map((m) => {
               const reqs = d.requirements.filter((r) => r.majorId === m.id)
