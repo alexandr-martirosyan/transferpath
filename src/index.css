@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+:root { color-scheme: light; }
+body { @apply bg-slate-50 text-slate-800 antialiased; font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+
+@utility card { @apply rounded-2xl border border-slate-200 bg-white shadow-sm; }
+@utility btn { @apply inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition; }
+@utility btn-primary { @apply btn bg-indigo-600 text-white hover:bg-indigo-700; }
+@utility btn-ghost { @apply btn border border-slate-200 bg-white text-slate-700 hover:bg-slate-50; }
+@utility input { @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100; }
+@utility label { @apply mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500; }
+@utility chip { @apply inline-flex cursor-pointer select-none items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition; }
+@utility chip-on { @apply chip border-indigo-600 bg-indigo-600 text-white; }
+@utility chip-off { @apply chip border-slate-300 bg-white text-slate-600 hover:border-indigo-400; }
+@utility badge { @apply inline-flex items-center rounded-md px-1.5 py-0.5 text-[11px] font-semibold; }
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: white; }
+  .card { box-shadow: none; break-inside: avoid; }
+  details { display: block; }
+  details > *:not(summary) { display: block !important; }
+}
