@@ -3,12 +3,12 @@ import { milesBetween, type Point } from './geo'
 
 export interface SearchHit { course: Course; collegeName: string; collegeShort: string; miles: number; sections: Section[]; isSource: boolean }
 
-/** Parse "PHYS 103 GCC" / "calculus" / "MATH 5A" → matching source courses. */
-export function findSourceCourses(d: Dataset, query: string): Course[] {
+/** Find courses matching "PHYS 103" / "phys103" / "calculus" at the chosen college (or any college if none). */
+export function findSourceCourses(d: Dataset, query: string, collegeId?: string): Course[] {
   const q = query.trim().toLowerCase()
   if (!q) return []
-  const collegeHit = d.colleges.find((c) => c.type === 'CC' && q.split(/\s+/).includes(c.short.toLowerCase()))
-  const rest = collegeHit ? q.replace(new RegExp(`\\b${collegeHit.short.toLowerCase()}\\b`), '').trim() : q
+  const collegeHit = collegeId ? d.colleges.find((c) => c.id === collegeId) : d.colleges.find((c) => c.type === 'CC' && q.split(/\s+/).includes(c.short.toLowerCase()))
+  const rest = collegeHit && !collegeId ? q.replace(new RegExp(`\\b${collegeHit.short.toLowerCase()}\\b`), '').trim() : q
   const compact = (s: string) => s.toLowerCase().replace(/[\s/]/g, '')
   return d.courses.filter((c) => (!collegeHit || c.collegeId === collegeHit.id) && rest && (compact(c.code).includes(compact(rest)) || c.title.toLowerCase().includes(rest)))
 }

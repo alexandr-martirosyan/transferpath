@@ -12,10 +12,13 @@ export default function Search() {
   const { d, collegeShort } = useData()
   const p = useProfile()
   const [params, setParams] = useSearchParams()
-  const [q, setQ] = useState(params.get('q') ?? 'PHYS 103 GCC')
+  const [q, setQ] = useState(params.get('q') ?? '')
+  const [college, setCollege] = useState(params.get('college') ?? p.homeCollegeId)
+  const ccs = d.colleges.filter((c) => c.type === 'CC')
+  const collegeCourses = d.courses.filter((c) => c.collegeId === college)
   const [term, setTerm] = useState<Term | 'Any'>('Winter')
   const [openOnly, setOpenOnly] = useState(false)
-  const sources = useMemo(() => findSourceCourses(d, q), [d, q])
+  const sources = useMemo(() => findSourceCourses(d, q, college), [d, q, college])
   const [picked, setPicked] = useState<string | null>(null)
   const source = sources.find((s) => s.id === picked) ?? sources[0]
   const origin = resolveOrigin(p, d).point
@@ -30,9 +33,18 @@ export default function Search() {
           <p className="text-slate-500">Can’t get a class at your college? Find the same class nearby, with times and open seats.</p>
         </div>
         <div className="card flex flex-wrap items-end gap-3 p-4">
-          <div className="min-w-64 flex-1">
+          <div className="min-w-56">
+            <span className="label">College</span>
+            <select className="input !py-2 !text-base" value={college} onChange={(e) => { setCollege(e.target.value); setPicked(null); setParams({ q, college: e.target.value }, { replace: true }) }}>
+              {ccs.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+          </div>
+          <div className="min-w-56 flex-1">
             <span className="label">Course</span>
-            <input className="input !py-2 !text-base" value={q} onChange={(e) => { setQ(e.target.value); setPicked(null); setParams({ q: e.target.value }, { replace: true }) }} placeholder="e.g. PHYS 103 GCC, calculus, MATH 5A" />
+            <input list="college-courses" className="input !py-2 !text-base" value={q} onChange={(e) => { setQ(e.target.value); setPicked(null); setParams({ q: e.target.value, college }, { replace: true }) }} placeholder="e.g. PHYS 103, MATH 104, calculus" />
+            <datalist id="college-courses">
+              {collegeCourses.map((c) => <option key={c.id} value={c.code}>{c.title}</option>)}
+            </datalist>
           </div>
           <div>
             <span className="label">Term</span>
@@ -50,7 +62,8 @@ export default function Search() {
           </div>
         )}
 
-        {!source && q && <div className="card p-8 text-center text-slate-500">No course found for “{q}”. Try a code like “MATH 5A” or a title like “data structures”.</div>}
+        {!q && <div className="card p-8 text-center text-slate-500">Pick a college, then type a course code like <b>PHYS 103</b>. We’ll show it and every equivalent class at colleges near you.</div>}
+        {!source && q && <div className="card p-8 text-center text-slate-500">No course “{q}” at {d.colleges.find((c) => c.id === college)?.name}. Start typing to see its course list, or try a title like “data structures”.</div>}
 
         {source && (
           <>

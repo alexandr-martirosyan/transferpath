@@ -48,7 +48,7 @@ export default function Courses() {
                 <span className={`badge !text-xs ${c.best.collegeId === p.homeCollegeId ? 'bg-emerald-100 text-emerald-800' : 'bg-sky-100 text-sky-800'}`}>{collegeShort(c.best.collegeId)} {c.best.course.code}</span>
                 {!c.best.forAll && <span className="text-xs text-amber-700">(not for {majors.filter((m) => c.requiredBy.includes(m) && !c.best!.majorIds.includes(m.id)).map((m) => collegeShort(m.ucId)).join(', ')})</span>}
                 {c.others.length > 0 && <span className="text-xs text-slate-400">also at {c.others.slice(0, 3).map((o) => collegeShort(o.collegeId)).join(', ')}{c.others.length > 3 ? ` +${c.others.length - 3}` : ''}</span>}
-                <Link to={`/search?q=${encodeURIComponent(`${c.best.course.code} ${collegeShort(c.best.collegeId)}`)}`} className="text-xs text-indigo-600 hover:underline">times →</Link>
+                <Link to={`/search?q=${encodeURIComponent(c.best.course.code)}&college=${c.best.collegeId}`} className="text-xs text-indigo-600 hover:underline">times →</Link>
               </>
             ) : <span className="badge bg-rose-100 text-rose-700">not offered nearby</span>}
           </div>
