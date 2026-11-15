@@ -4,7 +4,7 @@ import { useData } from '../state/data'
 import { useProfile } from '../state/profile'
 import { FiltersSidebar } from './Planner'
 import { MajorBadges, SourceLink } from '../components/Badges'
-import { buildMatrix, coverage, matchMajors } from '../services/planner'
+import { buildMatrix, classifyMajors, coverage, matchMajors } from '../services/planner'
 import { collegesInScope } from '../services/selection'
 
 type SortKey = 'uc' | 'gpa' | 'rate' | 'coverage' | 'reqs'
@@ -14,6 +14,7 @@ export default function Majors() {
   const p = useProfile()
   const [sort, setSort] = useState<SortKey>('coverage')
   const collegeIds = collegesInScope(p, d).map((s) => s.college.id)
+  const relatedIds = new Set(classifyMajors(d, p.targetUcIds, p.keyword).related.map((m) => m.id))
   const rows = useMemo(() => {
     return matchMajors(d, p.targetUcIds, p.keyword).map((m) => {
       const stats = d.admissionStats.filter((s) => s.majorId === m.id).sort((a, b) => b.year - a.year)[0]
@@ -64,7 +65,7 @@ export default function Majors() {
                 <tr key={m.id} className="border-t border-slate-100 align-top">
                   <td className="px-3 py-2"><span className="badge bg-slate-900 text-white">{uc.short}</span></td>
                   <td className="min-w-[230px] px-3 py-2">
-                    <div className="font-medium">{m.name} <span className="text-slate-400">{m.degree}</span></div>
+                    <div className="font-medium">{m.name} <span className="text-slate-400">{m.degree}</span>{relatedIds.has(m.id) && <span className="badge ml-1 bg-slate-100 text-slate-500">related</span>}</div>
                     <div className="text-xs text-slate-500">{m.school}</div>
                     <SourceLink major={m} />
                   </td>

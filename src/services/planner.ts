@@ -9,6 +9,30 @@ export function matchMajors(d: Dataset, ucIds: string[], keyword: string): Major
   )
 }
 
+/**
+ * Split keyword matches: "main" = the major's name equals (or, if none, contains) the keyword,
+ * "related" = matched only through related keywords (e.g. Software Engineering for "computer science").
+ */
+export function classifyMajors(d: Dataset, ucIds: string[], keyword: string) {
+  const q = norm(keyword)
+  const all = matchMajors(d, ucIds, keyword)
+  // Exact program name wins ("computer science" → only "Computer Science"); otherwise names containing it.
+  const exact = all.filter((m) => norm(m.name) === q)
+  const main = !q ? all : exact.length ? exact : all.filter((m) => norm(m.name).includes(q))
+  const related = all.filter((m) => !main.includes(m))
+  return { main, related }
+}
+
+/** Majors actually in the plan: main ones unless unticked, related ones only if ticked. */
+export function plannedMajors(d: Dataset, ucIds: string[], keyword: string, overrides: Record<string, boolean>) {
+  const { main, related } = classifyMajors(d, ucIds, keyword)
+  return {
+    main,
+    related,
+    selected: [...main.filter((m) => overrides[m.id] !== false), ...related.filter((m) => overrides[m.id] === true)],
+  }
+}
+
 export interface MatrixCell { courses: Course[] }
 export interface MatrixRow { req: Requirement; cells: Record<string, MatrixCell>; covered: boolean; coveredAtHome: boolean }
 
@@ -73,7 +97,7 @@ export function bestCombo(d: Dataset, majors: Major[], collegeIds: string[], hom
     if (!best) break
     take(best)
   }
-  return { steps, uncovered: [...remaining].map((id) => reqById.get(id)!), totalNeeded: reqById.size }
+  return { steps, uncovered: [...remaining].map((id) => reqById.get(id)!), totalNeeded: reqById.size, distinctCourses: new Set(reqs.map((r) => r.canon)).size }
 }
 
 /** Describe a set of requirements compactly: "Calculus I · Data Structures (UCLA, UCSD)". */

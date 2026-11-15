@@ -16,6 +16,7 @@ export interface Profile {
   targetUcIds: string[]
   keyword: string
   targetMajorIds: string[]
+  majorOverrides: Record<string, boolean> // planner: untick main / tick related majors
   taken: TakenCourse[]
   startYear: number // first CC term year (Fall)
   gePattern: GEPattern
@@ -42,6 +43,7 @@ export const defaultProfile: Profile = {
   targetUcIds: ['ucla', 'ucb', 'ucsd', 'uci'],
   keyword: 'computer science',
   targetMajorIds: ['ucla-cs', 'ucb-cs', 'ucsd-cs', 'ucd-cs', 'ucsc-cs'],
+  majorOverrides: {},
   taken: [
     { courseId: 'gcc:MATH 103', grade: 'A' },
     { courseId: 'gcc:MATH 104', grade: 'B' },
