@@ -10,7 +10,7 @@ Plan your UC transfer in one place, not 50 ASSIST tabs. See what to take, where 
 react, typescript, vite, tailwindcss, zustand, leaflet, openstreetmap, vercel, claude-code
 
 ## Try it out (links)
-- Live demo: <YOUR VERCEL URL>
+- Live demo: https://transferpath-uc.vercel.app
 - Code: https://github.com/alexandr-martirosyan/transferpath
 
 ## Video demo link
