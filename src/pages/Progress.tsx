@@ -5,6 +5,7 @@ import type { Grade } from '../domain/types'
 import { auditGE, patternFor, suggestFor, TAG_NAMES } from '../services/geAudit'
 import { computeGpa, GRADE_LABELS, projectGpa, requiredAvg } from '../services/gpa'
 import { collegesInScope } from '../services/selection'
+import MyCourses from '../components/MyCourses'
 
 const GRADES: Grade[] = ['A', 'B', 'C', 'D', 'F', 'P', 'IP', 'PLAN']
 const PASSING = new Set<Grade>(['A', 'B', 'C', 'P'])
@@ -75,42 +76,11 @@ export default function Progress() {
           </div>
         </div>
         <p className="text-xs text-slate-500">{pattern.summary}</p>
-        <div className="space-y-2 rounded-xl bg-slate-50 p-3">
-          <span className="label">Add a course (any college)</span>
-          <select className="input" value={college} onChange={(e) => { setCollege(e.target.value); setCourseId('') }}>
-            {ccs.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </select>
-          <select className="input" value={courseId} onChange={(e) => setCourseId(e.target.value)}>
-            <option value="">Select course…</option>
-            {collegeCourses.map((c) => <option key={c.id} value={c.id}>{c.code} — {c.title} ({c.units}u)</option>)}
-          </select>
-          <div className="flex gap-2">
-            <select className="input" value={grade} onChange={(e) => setGrade(e.target.value as Grade)}>
-              {GRADES.map((g) => <option key={g} value={g}>{GRADE_LABELS[g]}</option>)}
-            </select>
-            <button className="btn-primary shrink-0" onClick={add}>Add</button>
-          </div>
-        </div>
-        <div>
-          <span className="label">My courses ({takenCourses.length})</span>
-          {takenCourses.length === 0 && <p className="rounded-lg border border-dashed border-slate-300 p-3 text-sm text-slate-500">No courses yet. Pick a college, a course and a grade above, then press <b>Add</b>. Use “In progress” for this term and “Planned” for future terms.</p>}
-          <ul className="max-h-80 space-y-1 overflow-y-auto">
-            {takenCourses.map(({ t, c }) => (
-              <li key={c.id} className="flex items-center gap-2 rounded-lg border border-slate-100 px-2 py-1.5 text-sm">
-                <span className="badge bg-slate-100 text-slate-600">{collegeShort(c.collegeId)}</span>
-                <span className="flex-1 truncate" title={c.title}>{c.code} <span className="text-xs text-slate-400">{c.units}u</span></span>
-                <select className="rounded border border-slate-200 text-xs" value={t.grade} onChange={(e) => update(c.id, e.target.value as Grade)}>
-                  {GRADES.map((g) => <option key={g} value={g}>{GRADE_LABELS[g]}</option>)}
-                </select>
-                <button className="text-slate-400 hover:text-rose-600" onClick={() => remove(c.id)}>✕</button>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <MyCourses />
       </aside>
 
       <section className="min-w-0 space-y-5">
-        <div><h1 className="text-3xl font-bold text-slate-900">GE & GPA</h1><p className="text-slate-500">Add every class you’ve taken or plan to take (from any college). We’ll track GE, units and GPA.</p></div>
+        <div><h1 className="text-3xl font-bold text-slate-900">My Classes & GE</h1><p className="text-slate-500">Add every class you’ve taken or plan to take (from any college). We’ll track GE, units and GPA.</p></div>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           {[
             ['Transfer GPA', stats.gradedUnits ? stats.gpa.toFixed(2) : '—', `${stats.gradedUnits} graded units`],

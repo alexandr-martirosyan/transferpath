@@ -6,6 +6,9 @@ import { MajorBadges, SourceLink } from '../components/Badges'
 import { bestCombo, buildMatrix, coverage, summarizeReqs } from '../services/planner'
 import { buildCoursePlan, type PlanCourse } from '../services/coursePlan'
 import { collegesInScope, resolveOrigin } from '../services/selection'
+import { GRADES } from '../components/MyCourses'
+import { GRADE_LABELS } from '../services/gpa'
+import type { Grade } from '../domain/types'
 
 const STATUS = {
   todo: { title: 'Still need to take', icon: '⬜' },
@@ -49,6 +52,12 @@ export default function Courses() {
                 {!c.best.forAll && <span className="text-xs text-amber-700">(not for {majors.filter((m) => c.requiredBy.includes(m) && !c.best!.majorIds.includes(m.id)).map((m) => collegeShort(m.ucId)).join(', ')})</span>}
                 {c.others.length > 0 && <span className="text-xs text-slate-400">also at {c.others.slice(0, 3).map((o) => collegeShort(o.collegeId)).join(', ')}{c.others.length > 3 ? ` +${c.others.length - 3}` : ''}</span>}
                 <Link to={`/search?q=${encodeURIComponent(c.best.course.code)}&college=${c.best.collegeId}`} className="text-xs text-indigo-600 hover:underline">times →</Link>
+                <select className="rounded-md border border-indigo-200 bg-white px-1.5 py-0.5 text-xs text-indigo-700" value=""
+                  title={`Add ${collegeShort(c.best.collegeId)} ${c.best.course.code} to my classes`}
+                  onChange={(e) => p.set({ taken: [...p.taken, { courseId: c.best!.course.id, grade: e.target.value as Grade }] })}>
+                  <option value="" disabled>+ I took / plan it…</option>
+                  {GRADES.map((g) => <option key={g} value={g}>{GRADE_LABELS[g]}</option>)}
+                </select>
               </>
             ) : <span className="badge bg-rose-100 text-rose-700">not offered nearby</span>}
           </div>
@@ -107,7 +116,7 @@ export default function Courses() {
               </section>
             )
           })}
-          <p className="pb-2 text-xs text-slate-500">Mark courses as taken or planned on the <Link to="/progress" className="text-indigo-600 underline">GE & GPA</Link> page.</p>
+          <p className="pb-2 text-xs text-slate-500">Use “+ I took / plan it…” on any course, or the <b>+ Add classes</b> button at the top to add classes from another college.</p>
         </div>
       )}
 

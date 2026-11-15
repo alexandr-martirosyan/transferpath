@@ -7,7 +7,7 @@ const NAV = [
   ['/courses', 'What to Take'],
   ['/majors', 'Explore Majors'],
   ['/chances', 'My Chances'],
-  ['/progress', 'GE & GPA'],
+  ['/progress', 'My Classes & GE'],
   ['/search', 'Find a Class'],
 ] as const
 

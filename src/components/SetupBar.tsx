@@ -4,6 +4,7 @@ import { useUI } from '../state/ui'
 import { collegesInScope, resolveOrigin } from '../services/selection'
 import LocationPanel from './LocationPanel'
 import MajorPicker, { MyMajorsChips } from './MajorPicker'
+import MyCourses from './MyCourses'
 
 /** One-line summary of the student's setup, shown on every tool page. */
 export function SetupBar() {
@@ -17,7 +18,9 @@ export function SetupBar() {
     <div className="no-print mb-6 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm">
       <span>📍 <b>{origin.label}</b> <span className="text-slate-500">+ {scope.length - 1} colleges {p.selectionMode === 'radius' ? `within ${p.radius} mi` : 'picked'}</span></span>
       <span>🎓 <b>{p.targetMajorIds.length} {p.targetMajorIds.length === 1 ? 'major' : 'majors'}</b> <span className="text-slate-500">{ucs.length ? `at ${ucs.join(', ')}` : ''}</span></span>
-      <button className="btn-ghost ml-auto" onClick={open}>✏️ Change</button>
+      <span>📚 <b>{p.taken.length} {p.taken.length === 1 ? 'class' : 'classes'}</b></span>
+      <button className="btn-primary ml-auto" onClick={open}>+ Add classes</button>
+      <button className="btn-ghost" onClick={open}>✏️ Change</button>
     </div>
   )
 }
@@ -40,6 +43,10 @@ export function SetupDrawer() {
             <summary className="cursor-pointer text-sm font-medium text-indigo-700">Find & add majors</summary>
             <div className="mt-3"><MajorPicker /></div>
           </details>
+        </section>
+        <section className="mt-6 space-y-3">
+          <h3 className="font-semibold">📚 My classes</h3>
+          <MyCourses />
         </section>
         <section className="mt-6 space-y-3">
           <h3 className="font-semibold">📍 Where I can take classes</h3>

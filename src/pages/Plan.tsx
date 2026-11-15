@@ -149,7 +149,7 @@ export default function Plan() {
         {[
           ['/courses', '📋', 'What to take', 'Full checklist & compare colleges'],
           ['/search', '📅', 'Find a class', 'Times & open seats near you'],
-          ['/progress', '✅', 'GE & GPA', 'Add courses, GE checklist, GPA projection'],
+          ['/progress', '✅', 'My Classes & GE', 'Add classes, GE checklist, GPA projection'],
         ].map(([to, icon, t, s]) => (
           <Link key={to} to={to} className="card flex items-center gap-3 p-4 hover:border-indigo-300">
             <span className="text-2xl">{icon}</span>
