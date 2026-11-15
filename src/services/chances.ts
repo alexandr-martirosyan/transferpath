@@ -40,6 +40,7 @@ export function estimateChance(d: Dataset, major: Major, gpa: number, opts: { ho
   const notes: string[] = []
   if (major.tag && rule) notes.push(tagEligible ? `Meets TAG minimum GPA ${rule.minGpa.toFixed(1)} — apply Sept 1–30.` : `TAG offered: need GPA ≥ ${rule.minGpa.toFixed(1)}.`)
   if (rule && major.tag) notes.push(rule.note)
+  if (rule && !major.tag) notes.push('This campus offers TAG, but NOT for this major — admission is not guaranteed.')
   if (tapBoost) notes.push('UCLA TAP: Honors/Scholars completion gives priority consideration (Letters & Science).')
   else if (major.tap) notes.push('TAP-eligible major — join your college Honors/Scholars program for priority at UCLA.')
   if (opts.mesa) notes.push('MESA: strengthens STEM application & support; not a formal admission guarantee.')
