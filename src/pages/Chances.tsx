@@ -34,7 +34,7 @@ export default function Chances() {
         <label className="flex items-center gap-2 text-sm"><input type="checkbox" className="accent-indigo-600" checked={p.honors} onChange={(e) => p.set({ honors: e.target.checked })} /> Honors / Scholars (UCLA TAP)</label>
         <label className="flex items-center gap-2 text-sm"><input type="checkbox" className="accent-indigo-600" checked={p.mesa} onChange={(e) => p.set({ mesa: e.target.checked })} /> MESA</label>
         <p className="w-full text-xs text-slate-500">
-          {p.gpaOverride == null ? `Calculated from your courses (${computed.gradedUnits} graded units). Drag to try other GPAs.` : <>Using a GPA you set. <button className="text-indigo-600 underline" onClick={() => p.set({ gpaOverride: null })}>Use GPA from my courses</button></>}
+          {p.gpaOverride == null ? (computed.gradedUnits ? `Calculated from your courses (${computed.gradedUnits} graded units). Drag to try other GPAs.` : 'No graded courses yet — showing 3.50. Drag the slider or type your GPA.') : <>Using a GPA you set. <button className="text-indigo-600 underline" onClick={() => p.set({ gpaOverride: null })}>Use GPA from my courses</button></>}
         </p>
       </div>
 

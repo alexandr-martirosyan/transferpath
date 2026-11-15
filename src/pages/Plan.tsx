@@ -52,7 +52,7 @@ export default function Plan() {
   const { pattern } = patternFor(p.startYear, p.gePattern)
   const ge = auditGE(pattern, p.taken.filter((t) => t.grade !== 'F' && t.grade !== 'D').map((t) => courseById.get(t.courseId)!).filter(Boolean))
   const geDone = ge.filter((a) => a.done || a.rule.optional).length
-  const fits = majorFit(d, p.taken).filter((f) => !p.targetMajorIds.includes(f.major.id) && f.missing.length <= 5).slice(0, 4)
+  const fits = p.taken.length === 0 ? [] : majorFit(d, p.taken).filter((f) => !p.targetMajorIds.includes(f.major.id) && f.missing.length <= 5).slice(0, 4)
 
   return (
     <div className="space-y-6">

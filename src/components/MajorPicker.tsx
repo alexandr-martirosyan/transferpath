@@ -50,11 +50,11 @@ export default function MajorPicker({ showUCs = true }: { showUCs?: boolean }) {
       <div>
         <div className="mb-1.5 flex items-center justify-between">
           <span className="label !mb-0">Matching majors — tick the ones you want</span>
-          {main.length > 1 && <button className="text-xs text-indigo-600 hover:underline" onClick={addAll}>Select all</button>}
+          {p.keyword.trim() && main.length > 1 && <button className="text-xs text-indigo-600 hover:underline" onClick={addAll}>Select all</button>}
         </div>
-        {main.length === 0 && related.length === 0 && <p className="text-sm text-slate-500">Nothing found. Try “computer science” or “engineering”, or pick more UCs.</p>}
-        <div className="space-y-1.5">{main.map((m) => <Row key={m.id} m={m} />)}</div>
-        {related.length > 0 && (
+        {!p.keyword.trim() ? <p className="text-sm text-slate-500">Type a subject above or tap a suggestion.</p> : main.length === 0 && related.length === 0 && <p className="text-sm text-slate-500">Nothing found. Try “computer science” or “engineering”, or pick more UCs.</p>}
+        {p.keyword.trim() && <div className="space-y-1.5">{main.map((m) => <Row key={m.id} m={m} />)}</div>}
+        {p.keyword.trim() && related.length > 0 && (
           <>
             <p className="mb-1.5 mt-3 text-xs text-slate-500">Related majors you might also like:</p>
             <div className="space-y-1.5">{related.map((m) => <Row key={m.id} m={m} />)}</div>

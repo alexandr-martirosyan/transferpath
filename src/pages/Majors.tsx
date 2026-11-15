@@ -100,9 +100,10 @@ function FitView() {
           <label className="flex items-center gap-2"><input type="checkbox" className="accent-indigo-600" checked={onlyMyUcs} onChange={(e) => setOnlyMyUcs(e.target.checked)} /> Only UCs I picked</label>
         </div>
       </div>
-      {fits.length === 0 && <div className="card p-8 text-center text-slate-500">No majors this close yet. Raise the limit or add more courses.</div>}
+      {counted.length === 0 ? <div className="card p-8 text-center text-slate-500">Add the courses you’ve taken on <Link to="/progress" className="text-indigo-600 underline">GE & GPA</Link> first — then we’ll show which majors they fit.</div>
+        : fits.length === 0 && <div className="card p-8 text-center text-slate-500">No majors this close yet. Raise the limit or add more courses.</div>}
       <div className="grid gap-3 md:grid-cols-2">
-        {fits.map((f) => (
+        {(counted.length ? fits : []).map((f) => (
           <div key={f.major.id} className="card p-4">
             <div className="flex items-start gap-3">
               <div className="flex-1">

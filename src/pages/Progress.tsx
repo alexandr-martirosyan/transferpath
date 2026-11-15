@@ -81,6 +81,7 @@ export default function Progress() {
         </div>
         <div>
           <span className="label">My courses ({takenCourses.length})</span>
+          {takenCourses.length === 0 && <p className="rounded-lg border border-dashed border-slate-300 p-3 text-sm text-slate-500">No courses yet. Pick a college, a course and a grade above, then press <b>Add</b>. Use “In progress” for this term and “Planned” for future terms.</p>}
           <ul className="max-h-80 space-y-1 overflow-y-auto">
             {takenCourses.map(({ t, c }) => (
               <li key={c.id} className="flex items-center gap-2 rounded-lg border border-slate-100 px-2 py-1.5 text-sm">

@@ -56,7 +56,8 @@ export interface AreaResult { rule: AreaRule; used: Course[]; done: boolean; mis
 export function auditGE(pattern: GEPatternDef, courses: Course[]): AreaResult[] {
   const used = new Set<string>()
   // Allocate scarce areas first so a multi-tag course (e.g. Ethnic Studies) lands where it is unique.
-  const order = [...pattern.areas].sort((a, b) => a.tags.length - b.tags.length)
+  const special = (r: AreaRule) => (r.tags.includes('ETH') && r.tags.length === 1) || r.tags.includes('LOTE') ? 0 : 1
+  const order = [...pattern.areas].sort((a, b) => special(a) - special(b) || a.tags.length - b.tags.length)
   const results = new Map<string, AreaResult>()
   for (const rule of order) {
     const pool = courses.filter((c) => !used.has(c.id) && c.ge.some((t) => rule.tags.includes(t)))

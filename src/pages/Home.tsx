@@ -29,7 +29,6 @@ export default function Home() {
           ) : (
             <>
               <Link to="/start" className="btn bg-white !px-5 !py-2.5 text-indigo-700 hover:bg-indigo-50">Get started — 2 minutes →</Link>
-              <Link to="/plan" className="btn border border-white/40 !px-5 !py-2.5 text-white hover:bg-white/10">See a demo plan</Link>
             </>
           )}
         </div>
